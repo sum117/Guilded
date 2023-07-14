@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  bot:
+    build: .
+    volumes:
+      - .:/bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    image: my-guilded-bot
