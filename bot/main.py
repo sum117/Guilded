@@ -3,7 +3,7 @@ import random
 from guilded.ext import commands
 from dotenv import load_dotenv
 from os import getenv
-from scrape_nikke import scrape_nikke
+from scrape_nikke import Nikke
 from novel_api import generate_image
 from upload_image import upload_image
 
@@ -67,7 +67,7 @@ async def roleplay(ctx: commands.Context, key: str, nikke_name: str, *input: str
         await ctx.send("Invalid key! Please use `perfil` or `rp`.")
         return
 
-    character = scrape_nikke(nikke_name)
+    character = Nikke.from_name(nikke_name)
     if character is None:
         await ctx.send("Invalid Nikke name or something went wrong!")
         return
