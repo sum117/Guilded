@@ -1,4 +1,4 @@
-# Guilded-NovelAI-Bot
+# Guilded Novel AI Bot
 
 This bot, named Guilded-NovelAI-Bot, is built for use on the Guilded platform using the Python language and the Guilded API. The bot leverages Novel AI to generate images, upload them to Imgur, and then post them in Guilded.
 
@@ -89,4 +89,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ---
 
-Please note: This bot is in active development, and more features may be added in the future.
+Please note: This was an experiment and I don't intend to maintain it.
