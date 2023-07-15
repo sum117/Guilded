@@ -31,7 +31,7 @@ class Nikke:
         self.profile = profile
         self.backstory = backstory
         self.image = image
-        self.portrait = f"https://ik.imagekit.io/ez2m5kovtw/tr:w-512,h-512,fo-auto,c-maintain_ratio/{image.split('/images/')[1]}"
+        self.portrait = f"https://ik.imagekit.io/ez2m5kovtw/tr:w-512,h-512,fo-top,c-maintain_ratio/{image.split('/images/')[1]}"
 
 
 def scrape_nikke(name: str) -> Optional[Nikke]:
