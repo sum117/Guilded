@@ -1,3 +1,4 @@
+import random
 import requests
 from zipfile import ZipFile
 from io import BytesIO
@@ -24,7 +25,7 @@ def generate_image(input, large=False):
             "controlnet_strength": 1,
             "legacy": False,
             "add_original_image": False,
-            "seed": 225375776,
+            "seed": random.randint(100000000, 999999999),
             "negative_prompt": "nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
         },
     }

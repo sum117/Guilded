@@ -4,8 +4,8 @@ services:
   bot:
     build: .
     volumes:
-      - .:/bot
+      - ./cache:/app/cache
     restart: unless-stopped
     env_file:
       - .env
-    image: my-guilded-bot
+    image: guilded-novelai-bot
