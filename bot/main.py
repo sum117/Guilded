@@ -1,3 +1,4 @@
+import re
 import guilded
 import random
 from guilded.ext import commands
@@ -63,8 +64,8 @@ async def generate(ctx: commands.Context, size: str = "small", *input: str):
 
 @bot.command()
 async def roleplay(ctx: commands.Context, key: str, nikke_name: str, *input: str):
-    if (key := key.lower()) not in ["perfil", "rp"]:
-        await ctx.send("Invalid key! Please use `perfil` or `rp`.")
+    if (key := key.lower()) not in ["perfil", "rp", "edit"]:
+        await ctx.send("Invalid key! Please use `perfil` or `rp` or `edit`.")
         return
 
     character = Nikke.from_name(nikke_name)
@@ -75,23 +76,62 @@ async def roleplay(ctx: commands.Context, key: str, nikke_name: str, *input: str
     embed = guilded.Embed()
     embed.title = character.name
     embed.color = random.randint(0, 16777215)
-    if key == "perfil":
-        # limit to 1024 characters, stop in the last space or newline
-        if len(character.profile) > 1024:
-            character.profile = character.profile[:1024].rsplit(maxsplit=1)[0]
 
-        embed.add_field(name="Perfil", value=character.profile, inline=False)
-        embed.set_footer(text=character.description)
-        embed.description = character.backstory
-        embed.set_image(url=character.image)
-    elif key == "rp":
-        embed.description = ctx.message.content.replace(
-            f"!roleplay {key} {nikke_name}", ""
-        )
-        embed.set_thumbnail(url=character.portrait)
-        await ctx.message.delete()
+    sanitized_string = re.sub(
+        rf"!roleplay(\s+)?{key}(\s+)?{nikke_name}", "", ctx.message.content
+    ).strip()
 
-    await ctx.send(embed=embed)
+    match key:
+        case "perfil":
+            if len(character.profile) > 1024:
+                character.profile = character.profile[:1024].rsplit(maxsplit=1)[0]
+
+            embed.add_field(name="Perfil", value=character.profile, inline=False)
+            embed.set_footer(text=character.description)
+            embed.description = character.backstory
+            embed.set_image(url=character.image)
+
+            await ctx.send(embed=embed)
+
+        case "rp":
+            embed.set_thumbnail(url=character.portrait)
+
+            chunks = [
+                sanitized_string[i : i + 2048]
+                for i in range(0, len(sanitized_string), 2048)
+            ]
+
+            for i in range(len(chunks)):
+                embed.description = chunks[i]
+                if i == 0:
+                    await ctx.send(embed=embed)
+                else:
+                    new_embed = guilded.Embed()
+                    new_embed.description = chunks[i]
+                    new_embed.color = embed.color
+                    await ctx.send(embed=new_embed)
+
+        case "edit":
+            # fetch last 5 messages from the bot.
+            messages = await ctx.channel.history(limit=5)
+            messages = list(filter(lambda x: x.author.id == bot.user.id, messages))
+            if len(messages) == 0:
+                await ctx.send("No messages found to edit!")
+                return
+
+            message = messages[0]
+            if len(message.embeds) == 0:
+                await ctx.send("No embeds found to edit!")
+                return
+
+            embed = message.embeds[0]
+
+            embed.description = sanitized_string
+            if len(sanitized_string) > 2048:
+                await ctx.send("Too many characters! Please use less than 2048.")
+
+            await message.edit(embed=embed)
+            await ctx.message.delete()
 
 
 bot.run(getenv("BOT_TOKEN"))
