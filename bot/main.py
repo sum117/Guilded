@@ -131,7 +131,7 @@ async def roleplay(ctx: commands.Context, key: str, nikke_name: str, *input: str
                 await ctx.send("Too many characters! Please use less than 2048.")
 
             await message.edit(embed=embed)
-            await ctx.message.delete()
+    await ctx.message.delete()
 
 
 bot.run(getenv("BOT_TOKEN"))
