@@ -104,7 +104,10 @@ class Nikke:
         profile = cls._extract_text(html_content, "Profile") or cls._extract_text(
             html_content, "Description"
         )
-        backstory = cls._extract_text(html_content, "Nikke_Backstory")
+        backstory = cls._extract_text(
+            html_content, "Nikke_Backstory"
+        ) or cls._extract_text(html_content, "Main_Story")
+
         image = (
             html_content.find("figure", {"class": "pi-item pi-image"})
             .find("img")["src"]

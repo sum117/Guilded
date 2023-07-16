@@ -83,8 +83,13 @@ async def roleplay(ctx: commands.Context, key: str, nikke_name: str, *input: str
 
     match key:
         case "perfil":
-            if len(character.profile) > 1024:
-                character.profile = character.profile[:1024].rsplit(maxsplit=1)[0]
+            for field in ["profile", "backstory", "description"]:
+                if len(getattr(character, field)) > 1024:
+                    setattr(
+                        character,
+                        field,
+                        getattr(character, field)[:1024].rsplit(maxsplit=1)[0],
+                    )
 
             embed.add_field(name="Perfil", value=character.profile, inline=False)
             embed.set_footer(text=character.description)
